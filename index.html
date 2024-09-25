@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Solicitud</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <div class="theme-toggle-container">
+        <button id="toggle-theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="form-container">
+        <h2>Formulario de Solicitud</h2>
+        <form id="solicitud-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="solicitud">Solicitud</label>
+                    <input type="text" id="solicitud" name="solicitud" required>
+                </div>
+                <div class="form-group">
+                    <label for="finca">Finca</label>
+                    <input type="text" id="finca" name="finca" required>
+                </div>
+                <div class="form-group">
+                    <label for="folio">Folio</label>
+                    <input type="text" id="folio" name="folio" required>
+                </div>
+                <div class="form-group">
+                    <label for="calle">Calle</label>
+                    <input type="text" id="calle" name="calle" list="calle-options" autocomplete="off" required>
+                    <datalist id="calle-options"></datalist>
+                </div>
+                <div class="form-group">
+                    <label for="nro">Nro</label>
+                    <input type="text" id="nro" name="nro" required>
+                </div>
+                <div class="form-group">
+                    <label for="constructor">Constructor</label>
+                    <input type="text" id="constructor" name="constructor" required>
+                </div>
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" required>
+                </div>
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="nro-boleta">Nro Boleta</label>
+                    <input type="text" id="nro-boleta" name="nro-boleta" required>
+                </div>
+                <div class="form-group">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                </div>
+                <div class="form-group">
+                    <label for="observaciones">Observaciones</label>
+                    <textarea id="observaciones" name="observaciones"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <input type="text" id="estado" name="estado" required>
+                </div>
+            </div>
+            <button type="submit">Enviar</button>
+            <button type="reset">Cancelar</button>
+            <button type="button">Listar</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/8eceaa5955.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
