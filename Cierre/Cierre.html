@@ -23,7 +23,8 @@
         .container {
             display: flex;
             flex-direction: column;
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
             margin-top: 20px;
         }
 
@@ -49,6 +50,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .addButton {
@@ -106,6 +108,20 @@
         body.dark .total {
             background-color: rgba(255, 255, 255, 0.1);
         }
+
+        /* Media Queries para pantallas pequeñas */
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+
+
+            input[type="text"] {
+                width: 100%;
+            }
+
+
+        }
     </style>
 </head>
 
@@ -117,14 +133,13 @@
 
     <div class="total" id="total">Total: 0</div>
     <div>
-        <button id="addButton" class="addButton"><i class="fa-solid fa-plus"></i> Celda</button>
-        <button id="removeButton" class="removeButton"><i class="fa-solid fa-minus"></i> Celda</button>
-        <button id="clearButton" class="clearButton"><i class="fa-solid fa-trash"></i> Limpiar</button>
+        <button id="addButton" class="addButton"><i class="fa-solid fa-plus"></i></button>
+        <button id="removeButton" class="removeButton"><i class="fa-solid fa-minus"></i></button>
+        <button id="clearButton" class="clearButton"><i class="fa-solid fa-trash"></i></button>
         <button id="themeToggle" class="theme-toggle">
             <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
         </button>
     </div>
-
     <script>
         const inputContainer = document.getElementById('inputContainer');
         const totalDisplay = document.getElementById('total');
