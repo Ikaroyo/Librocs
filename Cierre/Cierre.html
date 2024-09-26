@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Fórmulas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 70%;
+        }
+
+        button {
+            margin-left: 5px;
+            padding: 10px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .addButton {
+            background-color: #007bff;
+        }
+
+        .clearButton {
+            background-color: #28a745;
+        }
+
+        .deleteContentButton {
+            background-color: #dc3545;
+        }
+
+        .removeButton {
+            background-color: #f39c12;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .theme-toggle {
+            background-color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        /* Light theme */
+        body.light {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        body.light .total {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        /* Dark theme */
+        body.dark {
+            background-color: #333;
+            color: #f9f9f9;
+        }
+
+        body.dark .total {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <h1>Calculadora</h1>
+    <div class="container" id="inputContainer">
+        <!-- Celdas de entrada se generarán aquí -->
+    </div>
+
+    <div class="total" id="total">Total: 0</div>
+    <div>
+        <button id="addButton" class="addButton">Agregar Celda</button>
+        <button id="removeButton" class="removeButton">Quitar Celda</button>
+        <button id="clearButton" class="clearButton">Limpiar</button>
+        <button id="themeToggle" class="theme-toggle">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </div>
+
+    <script>
+        const inputContainer = document.getElementById('inputContainer');
+        const totalDisplay = document.getElementById('total');
+        const themeToggle = document.getElementById('themeToggle');
+
+        function calculateTotal() {
+            let total = 0;
+            const formulas = document.querySelectorAll('.formula');
+            formulas.forEach(input => {
+                const value = input.value.trim();
+                if (value) {
+                    try {
+                        const result = eval(value);
+                        if (typeof result === 'number' && !isNaN(result)) {
+                            total += result;
+                        }
+                    } catch (e) {
+                        // Ignorar errores de evaluación
+                    }
+                }
+            });
+            totalDisplay.textContent = 'Total: ' + total;
+        }
+
+        function createInput(value = '') {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'formula';
+            input.placeholder = 'Introduce una fórmula';
+            input.value = value;
+            input.tabIndex = 1;
+
+            const deleteContentButton = document.createElement('button');
+            deleteContentButton.className = 'deleteContentButton';
+            deleteContentButton.textContent = 'X';
+            deleteContentButton.onclick = () => {
+                input.value = '';
+                calculateTotal(); // Recalcular el total al limpiar contenido
+            };
+
+            input.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter' || event.key === 'Tab') {
+                    event.preventDefault(); // Previene el cambio de foco
+                    calculateTotal();
+                }
+            });
+
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(deleteContentButton);
+            inputContainer.appendChild(inputGroup);
+        }
+
+        function saveInputs() {
+            const inputs = [];
+            document.querySelectorAll('.formula').forEach(input => {
+                inputs.push(input.value);
+            });
+            localStorage.setItem('formulas', JSON.stringify(inputs));
+        }
+
+        function loadInputs() {
+            const storedInputs = localStorage.getItem('formulas');
+            if (storedInputs) {
+                const inputs = JSON.parse(storedInputs);
+                inputs.forEach(value => createInput(value));
+            } else {
+                createInput(); // Inicializar con una casilla si no hay datos guardados
+            }
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            const toggleIcon = document.querySelector('i');
+            if (newTheme === 'light') {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+            }
+            document.body.classList.remove(currentTheme);
+            document.body.classList.add(newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.add(savedTheme);
+        }
+
+        document.getElementById('addButton').addEventListener('click', () => {
+            createInput();
+            saveInputs(); // Guardar al agregar
+        });
+
+        document.getElementById('removeButton').addEventListener('click', () => {
+            const inputGroups = document.querySelectorAll('.input-group');
+            if (inputGroups.length > 0) {
+                inputGroups[inputGroups.length - 1].remove();
+                saveInputs(); // Guardar al eliminar
+                calculateTotal(); // Recalcular total al eliminar
+            }
+        });
+
+        document.getElementById('clearButton').addEventListener('click', () => {
+            const formulas = document.querySelectorAll('.formula');
+            formulas.forEach(input => {
+                input.value = '';
+            });
+            totalDisplay.textContent = 'Total: 0';
+            saveInputs(); // Guardar estado al limpiar
+        });
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Cargar entradas y tema guardado al iniciar
+        loadInputs();
+        loadTheme();
+    </script>
+
+    <script src="https://kit.fontawesome.com/8eceaa5955.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
